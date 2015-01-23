@@ -23,6 +23,8 @@ import com.aerospike.client.query.Filter;
 import com.aerospike.client.query.IndexType;
 import com.aerospike.client.query.ResultSet;
 import com.aerospike.client.query.Statement;
+import com.aerospike.client.task.IndexTask;
+import com.aerospike.client.task.RegisterTask;
 
 
 /**
@@ -91,12 +93,14 @@ public class TopTen {
 			 * Create index for query
 			 * Index creation only needs to be done once and can be done using AQL or ASCLI also
 			 */
-			as.client.createIndex(null, as.namespace, as.set, "top-10", TIME_BIN, IndexType.NUMERIC);
+			IndexTask it = as.client.createIndex(null, as.namespace, as.set, "top-10", TIME_BIN, IndexType.NUMERIC);
+			it.waitTillComplete();
 			/*
 			 * Register UDF module
 			 * Registration only needs to be done after a change in the UDF module.
 			 */
-			as.client.register(null, "udf/leaderboard.lua", "leaderboard.lua", Language.LUA);
+			RegisterTask rt = as.client.register(null, "udf/leaderboard.lua", "leaderboard.lua", Language.LUA);
+			rt.waitTillComplete();
 			
 			if (cl.hasOption("l")) {
 				as.populateData();
@@ -135,10 +139,6 @@ public class TopTen {
 	}
 	
 	private void aggregate(Statement stmt){
-//		RecordSet rs = this.client.query(null, stmt);
-//		while (rs.next()){
-//			System.out.println(rs.getRecord());
-//		}
 		ResultSet rs = this.client.queryAggregate(null, stmt, "leaderboard", "top", Value.get(10));
 		
 		while (rs.next()){
@@ -147,8 +147,8 @@ public class TopTen {
 				System.out.println(element);
 			}
 		}
-		
 	}
+	
 	public void populateData(){
 		for (int index = 1; index <= MAX_RECORDS; index++){
 			String keyString = EVENT_ID_PREFIX + index;
