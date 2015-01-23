@@ -2,6 +2,8 @@ package com.aerospike.examples;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -19,7 +21,6 @@ import com.aerospike.client.policy.Policy;
 import com.aerospike.client.policy.WritePolicy;
 import com.aerospike.client.query.Filter;
 import com.aerospike.client.query.IndexType;
-import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.aerospike.client.query.Statement;
 
@@ -141,7 +142,10 @@ public class TopTen {
 		ResultSet rs = this.client.queryAggregate(null, stmt, "leaderboard", "top", Value.get(10));
 		
 		while (rs.next()){
-			System.out.println(rs.getObject());
+			List<Map<String, Object>> result =  (List<Map<String, Object>>) rs.getObject();
+			for (Map<String, Object> element : result){
+				System.out.println(element);
+			}
 		}
 		
 	}
