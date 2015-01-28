@@ -29,6 +29,11 @@ java -jar aerospike-top-10-1.0-full.jar -l
 ```
 It will generate 100,000 `Event` records with an event name and a time stamp.
 
+To verify you have loaded data use this command:
+```bash
+java -jar aerospike-top-10-1.0-full.jar -S
+```
+
 You can run the aggregation with the following command:
 ```bash
 java -jar aerospike-top-10-1.0-full.jar -q
@@ -44,6 +49,7 @@ This program will load a User Defined Function (UDF) module when it starts. It w
 -p,--port <arg>       Server port (default: 3000)
 -q,--query            Aggregate with query.
 -s,--set <arg>        Set (default: demo)
+-S,--scan			  Scan all for testing.
 -u,--usage            Print usage.
 ```
 

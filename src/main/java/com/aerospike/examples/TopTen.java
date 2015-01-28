@@ -76,7 +76,7 @@ public class TopTen {
 			options.addOption("l", "load", false, "Load data.");
 			options.addOption("q", "query", false, "Aggregate with query.");
 			options.addOption("a", "all", false, "Aggregate all using ScanAggregate.");
-			options.addOption("S", "scan", false, "Aggregate all using ScanAggregate.");
+			options.addOption("S", "scan", false, "Scan all for testing.");
 
 			CommandLineParser parser = new PosixParser();
 			CommandLine cl = parser.parse(options, args, false);
