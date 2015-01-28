@@ -13,9 +13,12 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 
 import com.aerospike.client.AerospikeClient;
+import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Language;
+import com.aerospike.client.Record;
+import com.aerospike.client.ScanCallback;
 import com.aerospike.client.Value;
 import com.aerospike.client.policy.Policy;
 import com.aerospike.client.policy.WritePolicy;
@@ -45,6 +48,7 @@ public class TopTen {
 	private static final String EVENT_ID_PREFIX = "Event:";
 
 	private static Logger log = Logger.getLogger(TopTen.class);
+	private int total;
 	public TopTen(String host, int port, String namespace, String set)  {
 		this.client = new AerospikeClient(host, port);
 		this.seedHost = host;
@@ -72,6 +76,7 @@ public class TopTen {
 			options.addOption("l", "load", false, "Load data.");
 			options.addOption("q", "query", false, "Aggregate with query.");
 			options.addOption("a", "all", false, "Aggregate all using ScanAggregate.");
+			options.addOption("S", "scan", false, "Aggregate all using ScanAggregate.");
 
 			CommandLineParser parser = new PosixParser();
 			CommandLine cl = parser.parse(options, args, false);
@@ -111,6 +116,9 @@ public class TopTen {
 			} else if (cl.hasOption("a")) {
 				as.scanAggregate();
 				return;
+			} else if (cl.hasOption("S")) {
+				as.scanAll();
+				return;
 			} else {
 				logUsage(options);
 			}
@@ -119,6 +127,20 @@ public class TopTen {
 		} catch (Exception e) {
 			log.error("Critical error", e);
 		}
+	}
+	private void scanAll(){
+		long start = System.currentTimeMillis();
+		total = 0;
+		this.client.scanAll(null, this.namespace, this.set, new ScanCallback() {
+			
+			@Override
+			public void scanCallback(Key key, Record record) throws AerospikeException {
+				total++;
+				
+			}
+		}, EVENT_ID_BIN, TIME_BIN);
+		long stop = System.currentTimeMillis();
+		System.out.println(String.format("Scan time for %d is %d milliseconds", total, (stop - start)));
 	}
 	private void scanAggregate() {
 		Statement stmt = new Statement();

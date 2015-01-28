@@ -30,7 +30,7 @@ function top(flow, top_size)
   
   local function accumulate(aggregate, nextitem)
     local aggregate_size = list.size(aggregate)
-      --info("Accumulator - size:"..tostring(aggregate_size).." Aggregate:"..tostring(aggregate))
+      info("Accumulator - size:"..tostring(aggregate_size).." Aggregate:"..tostring(aggregate))
       --info("Item:"..tostring(nextitem))
       index = 1
       for value in  list.iterator(aggregate) do
