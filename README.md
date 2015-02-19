@@ -223,7 +223,7 @@ The function `reducer()` simply combines two elements -- in this case two ordere
   end
 ```
 
-#### The stream function: orderby()
+#### The stream function: top()
 
 The stream function `top()` is the UDF called by the client. It takes a stream object as a parameter and configures a `map()` function, an `aggregate()` function and a `reduce()` function.
 
