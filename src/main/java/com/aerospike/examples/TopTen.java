@@ -2,8 +2,10 @@ package com.aerospike.examples;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -36,6 +38,7 @@ import com.aerospike.client.task.RegisterTask;
 public class TopTen {
 	private static final String EVENT_ID_BIN = "eventid";
 	private static final String TIME_BIN = "time";
+	private static final String LIST_BIN = "interests";
 	private static final int MAX_RECORDS = 100000;
 	private AerospikeClient client;
 	private String seedHost;
@@ -178,9 +181,22 @@ public class TopTen {
 			Key key = new Key(this.namespace, this.set, keyString);
 			Bin eventIdBin = new Bin(EVENT_ID_BIN, keyString);
 			Bin eventTSBin = new Bin(TIME_BIN, now);
-			this.client.put(null, key, eventIdBin, eventTSBin);
+			Bin eventListBin = Bin.asList(LIST_BIN, getList());
+			this.client.put(null, key, eventIdBin, eventTSBin, eventListBin);
 			System.out.println("Created: " + keyString);
 		}
+	}
+	
+	String[] interests = {"cats", "dogs", "mice", "birds", "lizards"};
+	Random rand = new Random();
+	
+	private List<String> getList(){
+		ArrayList<String> list = new ArrayList<String>();
+		int limit = rand.nextInt(5);
+		for (int i = 0; i < limit; i++){
+			list.add(interests[rand.nextInt(limit)]);
+		}
+		return list;
 	}
 	/**
 	 * Write usage to console.
