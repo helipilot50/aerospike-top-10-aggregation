@@ -146,11 +146,14 @@ public class TopTen {
 		System.out.println(String.format("Scan time for %d is %d milliseconds", total, (stop - start)));
 	}
 	private void scanAggregate() {
+		long now = System.currentTimeMillis();
 		Statement stmt = new Statement();
 		stmt.setNamespace(this.namespace);
 		stmt.setSetName(this.set);
 		stmt.setBinNames(EVENT_ID_BIN, TIME_BIN);
 		aggregate(stmt);
+		long completed = System.currentTimeMillis();
+		System.out.println(String.format("ScanAggregate completed in: %dms", completed-now));
 	}
 	public void queryAggregate() {
 		long now = System.currentTimeMillis();
@@ -161,9 +164,12 @@ public class TopTen {
 		stmt.setBinNames(EVENT_ID_BIN, TIME_BIN);
 		stmt.setFilters(Filter.range(TIME_BIN, yesterday, now));
 		aggregate(stmt);
+		long completed = System.currentTimeMillis();
+		System.out.println(String.format("QueryAggregate completed in: %dms", completed-now));
 	}
 	
 	private void aggregate(Statement stmt){
+		
 		ResultSet rs = this.client.queryAggregate(null, stmt, "leaderboard", "top", Value.get(10));
 		
 		while (rs.next()){
