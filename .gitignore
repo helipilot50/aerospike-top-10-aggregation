@@ -2,3 +2,5 @@
 .project
 .DS_Store
 /bin/
+org.eclipse.jdt.core.prefs
+target
