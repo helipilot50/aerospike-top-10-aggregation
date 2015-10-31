@@ -203,9 +203,10 @@ public class TopTen {
 			Key key = new Key(this.namespace, this.set, keyString);
 			Bin eventIdBin = new Bin(EVENT_ID_BIN, keyString);
 			Bin eventTSBin = new Bin(TIME_BIN, now);
-			Bin eventListBin = Bin.asList(LIST_BIN, getList());
+			Bin eventListBin = new Bin(LIST_BIN, getList());
 			this.client.put(null, key, eventIdBin, eventTSBin, eventListBin);
-			System.out.println("Created: " + keyString);
+			System.out.println("Created: " + keyString + ":" + eventTSBin);
+			
 		}
 	}
 	
