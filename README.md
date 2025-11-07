@@ -1,9 +1,9 @@
 # Finding the Top 10 using Aerospike Aggregations
 
-##Problem
+## Problem
 You want to create a leaderboard of the top 10 scores, or 10 most recent events, using Aerospike as the data store
 
-##Solution
+## Solution
 The solution is to use an Aggregation that processes the stream of tuples flowing from a query on a secondary index. The aggregation is done in code on each node in the cluster and finally aggregated, or reduced, in the client.
 
 ### How to build
@@ -20,7 +20,7 @@ mvn clean package
 ```
 A JAR file will be produced in the directory 'target', `aerospike-top-10-1.0-full.jar`
 
-###Running the solution
+### Running the solution
 This is a runnable jar complete with all the dependencies packaged.
 
 To load data use this command:
@@ -40,7 +40,7 @@ java -jar aerospike-top-10-1.0-full.jar -q
 ```
 This program will load a User Defined Function (UDF) module when it starts. It will look for the UDF module at this location `udf/leaderboard.lua`. Be sure you place it there.
 
-####Options
+#### Options
 ```
 -a,--all              Aggregate all using ScanAggregate.
 -h,--host <arg>       Server hostname (default: 127.0.0.1)
@@ -69,7 +69,7 @@ The output is a List of 10 Maps, in highest to lowest order:
 ```
 
 
-##Discussion
+## Discussion
 
 The Java code is very simple, in the `main()` method a secondary index is created on the `time` Bin and the UDF module is registered with the cluster.
 ```java
